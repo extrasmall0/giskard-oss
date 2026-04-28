@@ -19,7 +19,7 @@ class UserSimulatorOutput(BaseModel):
 
 
 @InputGenerator.register("user_simulator")
-class UserSimulator[TraceType: Trace](  # pyright: ignore[reportMissingTypeArgument]
+class UserSimulator[TraceType: Trace](
     InputGenerator[str, TraceType], WithGeneratorMixin
 ):
     """User simulation with predefined or custom personas.

@@ -8,6 +8,6 @@ if TYPE_CHECKING:
 
 
 @discriminated_base
-class InputGenerator[InputType, TraceType: "Trace"](Discriminated):  # pyright: ignore[reportMissingTypeArgument]
+class InputGenerator[InputType, TraceType: "Trace"](Discriminated):
     def __call__(self, trace: TraceType) -> AsyncGenerator[InputType, TraceType]:
         raise NotImplementedError
