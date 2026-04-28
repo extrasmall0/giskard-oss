@@ -32,7 +32,7 @@ class MockGenerator(BaseGenerator):
         )
 
 
-class LLMTrace(Trace[str, str], frozen=True):
+class LLMTrace(Trace[Interaction[str, str]], frozen=True):
     def _repr_prompt_(self) -> str:
         if not self.interactions:
             return "**No interactions yet**"
