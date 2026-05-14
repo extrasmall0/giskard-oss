@@ -71,6 +71,40 @@ async def test_run_skips_error():
     assert chat.failed
 
 
+async def test_missing_tool_name_raises_error():
+    class MissingToolNameGenerator(agents.generators.BaseGenerator):
+        @override
+        async def _call_model(
+            self,
+            messages: Sequence[ChatMessage],
+            params: agents.generators.GenerationParams,
+            metadata: dict[str, Any] | None = None,
+        ) -> CompletionResponse:
+            return CompletionResponse(
+                choices=[
+                    Choice(
+                        message=AssistantMessage(
+                            tool_calls=[
+                                ToolCall(
+                                    id="tc_missing_name",
+                                    function=ToolCallFunction(name="", arguments={}),
+                                )
+                            ]
+                        ),
+                        finish_reason="tool_calls",
+                        index=0,
+                    )
+                ]
+            )
+
+    workflow = agents.ChatWorkflow(generator=MissingToolNameGenerator())
+
+    with pytest.raises(
+        WorkflowError, match="Tool call requested by generator is missing a function name"
+    ):
+        _ = await workflow.chat("Hello!", role="user").run()
+
+
 async def test_unknown_tool_call_raises_error():
     class UnknownToolGenerator(agents.generators.BaseGenerator):
         @override
